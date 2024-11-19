@@ -61,7 +61,7 @@ Final results on test set (metric is averaged accuracy between 3 clasees):
 ## Exporting notebook to the script
 
 The whole training process can be reproduced using [train.py](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/train.py) file.  
-This file all the same operations we did in the notebook with the initial dataset and then trains XGboost model on preprocessed data.  
+This file has all the same operations we did in the notebook with the initial dataset and then trains XGboost model on preprocessed data.  
 Ready model is saved in [classifier_model.pkl](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/classifier_model.pkl) file.
 
 ## Reproducibility
@@ -78,6 +78,7 @@ All installations you need are the following:
       pip3 install matplotlib
       pip3 install tqdm
       pip3 install fastapi
+      pip3 install uvicorn
 
 for xgboost try one of the following:
 

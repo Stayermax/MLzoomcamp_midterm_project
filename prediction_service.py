@@ -32,7 +32,6 @@ def get_random_sample():
 
     """
     customer_data = df.sample(n=1).to_dict(orient='records')[0]
-    print(row)
     actual_credit_score = customer_data['credit_score']
     del customer_data['credit_score']
     return {"actual_credit_score": actual_credit_score, "customer_data": customer_data}
