@@ -139,4 +139,4 @@ The service gonna be accessingle from here:
 ## Cloud deployment 
 
 I deployed this service to the server of my company, so it won't be accessible from outside.  
-But here is the video of how I did it:
+But here is the video of how I did it and how I tested it: https://youtu.be/JUG1tZIOF08
