@@ -31,11 +31,11 @@ def get_random_sample():
     Returns data of **randomly sampled dictionary** from original dataset with customer data and **actual label**
 
     """
-    row = df.sample(n=1).to_dict(orient='records')[0]
+    customer_data = df.sample(n=1).to_dict(orient='records')[0]
     print(row)
-    credit_score = row['credit_score']
-    del row['credit_score']
-    return {"actual_label": credit_score, "customer_data": row}
+    actual_credit_score = customer_data['credit_score']
+    del customer_data['credit_score']
+    return {"actual_credit_score": actual_credit_score, "customer_data": customer_data}
 
 
 @app.post(root_path + '/predict_dict')
