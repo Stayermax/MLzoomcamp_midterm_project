@@ -28,17 +28,21 @@ model, dv = load_model()
 @app.get(root_path + '/random_sample')
 def get_random_sample():
     """
-    :return: random sample dictionary ready for prediction
+    Returns data of **randomly sampled dictionary** from original dataset with customer data and **actual label**
+
     """
     row = df.sample(n=1).to_dict(orient='records')[0]
     print(row)
     credit_score = row['credit_score']
     del row['credit_score']
-    return {"customer_data": row, "actual_label": credit_score}
+    return {"actual_label": credit_score, "customer_data": row}
 
 
 @app.post(root_path + '/predict_dict')
 def predict_dict(sample_dict: dict):
+    """
+    Predicts customer credit score from customer data
+    """
     dtest = xgb.DMatrix(
         dv.transform(sample_dict),
         feature_names=list(dv.get_feature_names_out())
