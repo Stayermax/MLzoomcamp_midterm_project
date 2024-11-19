@@ -225,18 +225,24 @@ def split_data(df: pd.DataFrame, test_size: float = 0.2):
 
     X_train = dv.fit_transform(df_train.to_dict(orient='records'))
     X_test = dv.transform(df_test.to_dict(orient='records'))
-
     features_names = list(dv.get_feature_names_out())
 
-    return X_train, y_train, X_test, y_test, features_names
-
-
-def train_the_model(X_train, y_train, features_names):
     dtrain = xgb.DMatrix(
         X_train,
         label=y_train.map({'Good': 0, 'Poor': 1, 'Standard': 2}),
         feature_names=features_names
     )
+
+    dtest = xgb.DMatrix(
+        X_test,
+        label=y_test.map({'Good': 0, 'Poor': 1, 'Standard': 2}),
+        feature_names=features_names
+    )
+
+    return dtrain, dtest, dv
+
+
+def train_the_model(dtrain):
     xgb_params = {
         'eta': 0.3,
         'max_depth': 15,
@@ -254,46 +260,36 @@ def train_the_model(X_train, y_train, features_names):
     return model
 
 
-def save_model(model, model_path: str):
+def save_model(model, dv, model_path: str):
     print(f"Model stored in {model_path} file.")
     with open(model_path, 'wb') as file:
-        pkl.dump(model, file)
+        pkl.dump((model, dv), file)
 
 
-def test_model(X_test, y_test, features_names):
-    dtest = xgb.DMatrix(
-        X_test,
-        label=y_test.map({'Good': 0, 'Poor': 1, 'Standard': 2}),
-        feature_names=features_names
-    )
-
+def test_model(dtest):
     y_pred = model.predict(dtest)
-    return accuracy_score(y_pred, y_test.map({'Good': 0, 'Poor': 1, 'Standard': 2}))
-
-
+    return accuracy_score(y_pred, dtest.get_label())
 
 if __name__ == '__main__':
     initial_dataset_path = 'data/initial_dataset.csv'
-    processed_dataset_path = "data/prepared_dataset.csv"
     model_path = "classifier_model.pkl"
     test_proportion = 0.2
 
     # Preprocess data::
     print(f"Starting the data preprocessing")
     df = preprocess_data(initial_dataset_path=initial_dataset_path)
-    print(f"Data is preprocessed and save to {processed_dataset_path}")
-    df.to_csv(processed_dataset_path, index=False)
+    print(f"Data is preprocessed")
 
-    # Split data,:
-    print(f"Splitting data to train and test. Test proportion: {test_proportion}")
-    X_train, y_train, X_test, y_test, features_names = split_data(df, test_size=test_proportion)
+    # Split data:
+    print(f"Splitting data to train and test. Test proportion: {test_proportion * 100}%")
+    dtrain, dtest, dv = split_data(df, test_size=test_proportion)
 
     # Training model and saving it
     print(f"Starting model training")
-    model = train_the_model(X_train, y_train, features_names)
-    save_model(model, model_path)
+    model = train_the_model(dtrain)
+    save_model(model, dv, model_path)
     print(f"Model is trained and saved to {model_path}")
 
     # Save trained model and test it:
-    accuracy = test_model(X_test, y_test, features_names)
+    accuracy = test_model(dtest)
     print(f"Model accuracy on test set: {accuracy*100}%")
