@@ -116,14 +116,44 @@ This POST endpoint accepts a dictionary (that you can take from the first endpoi
 
 ## Dependency and environment management
 
-But still let's try to run it:
-1. Create conda environment:
+#### Tested on linux server:
+
+I use python 3.10
+
+1. Venv module installation:  
+
+
+      sudo apt install python3-venv
+
+2. Enter directory with my midterm project:
+
       
-   conda env create -f environment.yml -n vitaly_venv python=3.10
+      cd path_to_my_project
 
-2. Import my libraries and install them:
+2. Create virtual environment:
+   
 
-    ...
+      python3 -m venv testing_environmet
+
+3. Activating virtual environment:
+
+
+      source testing_environmet/bin/activate
+
+4. Install requirments:
+
+
+      pip3 install -r requirements.txt
+
+5. To test the installation you can either:
+   1. run the testing script:
+   
+            python3 train.py
+   
+   2. Start prediction_service:
+   
+            uvicorn prediction_service:app --reload --port 8000 --host 0.0.0.0
+   
 
 ## Containerization
 
