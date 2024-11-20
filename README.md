@@ -20,9 +20,10 @@ Initial dataset is stored here: [data/initial_dataset.csv](https://github.com/St
 **So once again our task is to predict customer credit score based on customer parameters.**
 
 ### EDA + Model training
-**It can take up to 15 minutes to run the whole notebook, my models require some time for training.**  
+**It can take up to 30 minutes to run the whole notebook, my models require some time for training.**  
 
-The whole EDA process fully described in the [Jupyter notebook](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/notebook.ipynb)
+The whole EDA process fully described in the [Jupyter notebook](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/notebook.ipynb)  
+ 
 In a few words:
 
 #### Data analysis
@@ -36,7 +37,8 @@ In a few words:
 #### Features engineering
 1. We drop some columns like id, name and customer_id
 2. Out of categorical values we find the most unimportant features using mutual information metric and drop them as well (like ssn_area or payment_behaviour)
-3. Fully prepared dataset is stored here: [data/prepared_dataset.csv](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/data/prepared_dataset.csv)
+3. Out of numerical values we find the most unimportant features using correlation with each type of credit score and drop them as well (like annual_income or num_bank_accounts)
+4. Fully prepared dataset is stored here: [data/prepared_dataset.csv](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/data/prepared_dataset.csv)
 
 #### Splitting the data
 We split the data into train, validation and test in proportions 60/20/20
@@ -62,7 +64,7 @@ Final results on test set (metric is averaged accuracy between 3 clasees):
 
 The whole training process can be reproduced using [train.py](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/train.py) file.  
 This file has all the same operations we did in the notebook with the initial dataset and then trains XGboost model on preprocessed data.  
-Ready model is saved in [classifier_model.pkl](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/classifier_model.pkl) file.
+Ready model (with DictVectorizer) is saved in [classifier_model.pkl](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/classifier_model.pkl) file.
 
 ## Reproducibility
 
@@ -88,29 +90,34 @@ or
 
       conda install py-xgboost
 
+**I also recommend** running the following command:
+
+      pip3 install -r requirements.txt
+
+
 ## Model deployment
 
-My model is deployed via FastApi. You can run it using the following command:
+My model is deployed via FastApi. You can run it using the following command on port 8000:
 
-    uvicorn prediction_service:app --reload --port 8000 --host localhost
+    uvicorn prediction_service:app --reload --port 8000 --host 0.0.0.0
 
 You can open swagger of this service here: 
       
-      localhost:8000/credit_rating_serivce/api/docs
+      0.0.0.0:8000/credit_rating_serivce/api/docs
 
 This service has two endpoints:  
 #### **Random sample endpoint:**  
       
-      GET localhost:8000/credit_rating_serivce/api/random_sample
+      GET 0.0.0.0:8000/credit_rating_serivce/api/random_sample
 
 This GET endpoint returns you a randomly sampled dictionary with actually expected label in the following format:
    
-   {"actual_credit_score": actual_credit_score, "customer_data": customer_data_dict}
+      {"actual_credit_score": actual_credit_score, "customer_data": customer_data_dict}
 
 #### **Prediction endpoint:**  
 
 
-      POST localhost:8000/credit_rating_serivce/api/predict_dict
+      POST 0.0.0.0:8000/credit_rating_serivce/api/predict_dict
 
 This POST endpoint accepts a dictionary (that you can take from the first endpoint) and predicts a credit score. 
 
@@ -146,7 +153,7 @@ I use python 3.10
       pip3 install -r requirements.txt
 
 5. To test the installation you can either:
-   1. run the testing script:
+   1. Run the testing script:
    
             python3 train.py
    
@@ -157,12 +164,12 @@ I use python 3.10
 
 ## Containerization
 
-In order to build and run prediction service in Docker container:
+In order to build and run prediction service in Docker container on port 8000:
     
     docker build . -t prediction_service
     docker run -d -p 8000:8000 prediction_service
 
-The service gonna be accessingle from here:
+The service gonna be accessible from here:
    
       localhost:8000/credit_rating_serivce/api/docs
 
@@ -170,3 +177,5 @@ The service gonna be accessingle from here:
 
 I deployed this service to the server of my company, so it won't be accessible from outside.  
 But here is the video of how I did it and how I tested it: https://youtu.be/JUG1tZIOF08
+
+**On a video my data has fields that are currently deleted from the dataset, because I shoot it before deleting numerical columns with low correlation.** 
