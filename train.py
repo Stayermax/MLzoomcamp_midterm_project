@@ -254,7 +254,8 @@ def train_the_model(dtrain):
         'num_class': 3,
         'objective': 'multi:softmax',
         'seed': 1,
-        'verbosity': 1
+        'verbosity': 1,
+        "random_state": 179
     }
     model = xgb.train(
         xgb_params,
