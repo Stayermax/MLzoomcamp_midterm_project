@@ -167,6 +167,7 @@ def payment_behaviour_column_preprocessing(df: pd.DataFrame) -> pd.DataFrame:
         lambda x: x.fillna(x.mode().iloc[0]))
     return df
 
+
 def preprocess_types_and_nulls(df: pd.DataFrame) -> pd.DataFrame:
     df = month_column_preprocessing(df)
     df = name_column_preprocessing(df)
@@ -189,11 +190,14 @@ def preprocess_types_and_nulls(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def delete_redundant_сolumns(df: pd.DataFrame) -> pd.DataFrame:
+    # general
     del df['id']
     del df['customer_id']
     del df['ssn']
     del df['name']
     del df['type_of_loan']
+
+    # categorical
     del df['ssn_area']
     del df['payment_behaviour']
     del df['month']

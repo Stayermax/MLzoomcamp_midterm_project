@@ -37,7 +37,7 @@ In a few words:
 #### Features engineering
 1. We drop some columns like id, name and customer_id
 2. Out of categorical values we find the most unimportant features using mutual information metric and drop them as well (like ssn_area or payment_behaviour)
-3. Out of numerical values we find the most unimportant features using correlation with each type of credit score and drop them as well (like annual_income or num_bank_accounts)
+3. Out of numerical values we find the most unimportant features using correlation with each type of credit score. There were only 5 columns with low scores, so we decided to leave them.
 4. Fully prepared dataset is stored here: [data/prepared_dataset.csv](https://github.com/Stayermax/MLzoomcamp_midterm_project/blob/main/data/prepared_dataset.csv)
 
 #### Splitting the data
@@ -177,5 +177,3 @@ The service gonna be accessible from here:
 
 I deployed this service to the server of my company, so it won't be accessible from outside.  
 But here is the video of how I did it and how I tested it: https://youtu.be/JUG1tZIOF08
-
-**On a video my data has fields that are currently deleted from the dataset, because I shoot it before deleting numerical columns with low correlation.** 
